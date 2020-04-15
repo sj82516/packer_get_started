@@ -1,0 +1,34 @@
+{
+    "variables": {
+        "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+        "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+        "region": "us-east-1"
+    },
+    "builders": [{
+        "type": "amazon-ebs",
+        "access_key": "{{user `aws_access_key`}}",
+        "secret_key": "{{user `aws_secret_key`}}",
+        "region": "us-east-1",
+        "source_ami": "ami-0d03e44a2333dea65",
+        "instance_type": "t2.micro",
+        "ssh_username": "ubuntu",
+        "ami_name": "packer-example {{timestamp}}"
+    }],
+    "provisioners": [{
+        "type": "shell",
+        "script": "init.sh"
+    }, {
+        "type": "shell",
+        "inline": [
+            "ls",
+            "pwd"
+        ]
+    }, {
+        "type": "file",
+        "source": "server",
+        "destination": "~/server"
+    }, {
+        "type": "shell",
+        "script": "start.sh"
+    }]
+}
